@@ -1,53 +1,18 @@
+w5500lwip
+Compatible with Ethernet Wiznet 5500 ESP32 and ESP8266 Static or DHCP Modes available. It is a very raw script but it works, also the dns server.
 
-This repository has been [merged into esp8266/Arduino](https://github.com/esp8266/Arduino/pull/6680) and is now obsolete.
-===================================
+What it needs to run:
 
-You can use the git version of esp8266/Arduino or the [unofficial esp8266/Arduino snapshot release](https://d-a-v.github.io/esp8266/Arduino) regularly or on-request rebuilded.
+Setup the wifi module "on" or at least "WiFi.mode(WIFI_OFF)" to bring up the lwip interface and the "WiFiClient"
 
-For reference:
+Arduino's setup() example:
 
+static ip: uint8_t mac_addr[6] = { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xE }; IPAddress ip(192, 168, 1, 50); IPAddress subnet(255, 255, 255, 0); IPAddress gateway(192, 168, 1, 1); IPAddress dns(192, 168, 1, 1);
+Ethernet.begin(mac_addr,ip,subnet,gateway, dns);
 
-Ethernet drivers for lwIP on esp8266
-------------------------------------
+dhcp ip: Ethernet.begin(mac_addr);
 
-This library brings full ethernet (RJ45 cables) connectivity into an already
-existing lwIP stack, such as the one in esp8266.
+to use some client just use: WiFiClient wifiClient;
+That's it!
 
-Every network services should work
-* dhcp (client only for now)
-* dns
-* http(s) clients+servers
-* mqtt
-* ... your already working network services
-* no need for separate UDP/TCP api (like uIP or others, lwIP is already here)
-
-W5100, W5500 and enc28j60 drivers are slightly modified versions of
-
-https://github.com/njh/W5100MacRaw
-
-https://github.com/njh/W5500MacRaw
-
-https://github.com/njh/EtherSia (enc28j60)
-
-How to use
-----------
-Example soon (watch the few opened issues)
-
-As for now, the network interface is working as DHCP client only
-
-What's next
------------
-* allow dhcp server
-* provide better network helpers (like arduino's `WiFi.status()`)
-
-Notes (esp8266 and w5500, w5100?)
----------------------------------
-* the TCP/IP part of W5x00 chips is not used, the ethernet interface only is.
-* Do not directly connect SPI CS(ChipSelect) to esp8266'SS(SlaveSelect) (GPIO15), use another pin (hacks using a transistor exist for using this pin).
-
-Roadmap
--------
-* integration in esp8266 arduino core (this repository will be obsoleted)
-* dhcp server / driver for enc28j60
-* ~NAT (esp8266/arduino core (lwip2))~ (done)
-
+!!! Note: the are a lot of work to do eg. handling link states, reconnections, transitions, Eth configuration things and so on... !!!
